@@ -1,11 +1,10 @@
-.PHONY: env lab clean purge tunnel test
+.PHONY: env lab clean purge kill
 
 env:
-	# if needed, do a `brew install python3` and follow the instructions to link it
 	virtualenv -p python3 env
 	env/bin/pip install --upgrade pip
 	env/bin/pip install -r requirements.txt
-	#bash -l -c 'nvm install 14; nvm exec 14 env/bin/jupyter labextension install @jupyter-widgets/jupyterlab-manager @deck.gl/jupyter-widget nbdime-jupyterlab jupyterlab-plotly;'
+	bash -l -c 'nvm install 14; nvm exec 14 env/bin/jupyter labextension install @jupyter-widgets/jupyterlab-manager @deck.gl/jupyter-widget;'
 
 lab:
 	bash -l -c 'nvm install 14; nvm exec 14 env/bin/jupyter lab;'
