@@ -10,5 +10,5 @@ seaborn
 toolz
 pytest
 
-pydeck --pre
+pydeck==0.4.0b2
 h3
