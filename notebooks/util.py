@@ -293,7 +293,6 @@ def plot_hexvals4D(
     elevation_scale = 20,
     opacity = .7,
     wireframe = True,
-    return_widget = True,
 ):
     """
     Plot a collection of hexagons and associated values.
@@ -348,7 +347,4 @@ def plot_hexvals4D(
     )
     d.prep_data = prep_data
 
-    if return_widget:
-        return d.show()
-    else:
-        return d
+    return d
