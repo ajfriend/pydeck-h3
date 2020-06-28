@@ -1,0 +1,25 @@
+queryrunner-client>=2.6.0
+notebook<6
+jupyterlab
+nbdime
+
+pandas>=1.0.0
+numpy
+scipy
+matplotlib
+seaborn
+
+toolz
+pytest
+
+git+ssh://gitolite@code.uber.internal/thingscience/ajfriend/ajtools.git
+
+ipywidgets
+pydeck
+cvxpy
+plotly
+
+# pyarrow
+# requests
+# pendulum
+# mapboxgl
