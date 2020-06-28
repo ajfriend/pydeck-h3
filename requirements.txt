@@ -1,5 +1,5 @@
 jupyterlab
-nbdime
+#nbdime
 
 pandas>=1.0.0
 numpy
@@ -10,5 +10,5 @@ seaborn
 toolz
 pytest
 
-pydeck
+pydeck --pre
 h3

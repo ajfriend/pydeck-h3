@@ -176,9 +176,9 @@ def plot_hexset(hexes, fill_color=(245, 206, 66), opacity=.7, line_width=1):
         map_style = 'mapbox://styles/mapbox/light-v10',
     )
 
-    deckgl_widget = d.show()
+    #deckgl_widget = d.show()
 
-    return deckgl_widget
+    return d
 
 
 def plot_hexvals(hexvals, cmap='YlOrRd', opacity=.7, line_width=1):
@@ -219,7 +219,7 @@ def plot_hexvals(hexvals, cmap='YlOrRd', opacity=.7, line_width=1):
         tooltip = get_tooltip(data, 'value'),
     )
 
-    return d.show()
+    return d
 
 
 def plot_hexvals3D(hexvals, cmap='YlOrRd', opacity=.7, wireframe=True, elevation_scale=20):
@@ -264,7 +264,7 @@ def plot_hexvals3D(hexvals, cmap='YlOrRd', opacity=.7, wireframe=True, elevation
         tooltip = get_tooltip(data, 'value'),
     )
 
-    return d.show()
+    return d
 
 
 def get_tooltip(data, col_hex='hex'):
