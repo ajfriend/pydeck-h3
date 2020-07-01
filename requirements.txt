@@ -12,3 +12,5 @@ pytest
 
 pydeck==0.4.0b2
 h3
+
+streamlit

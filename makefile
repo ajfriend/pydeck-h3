@@ -27,3 +27,6 @@ kill:
 	# `fg` to bring it back to forecround
 	# use `jobs` to see jobs in background
 	kill %1
+
+run:
+	env/bin/streamlit run first_app.py
