@@ -10,7 +10,7 @@ seaborn
 toolz
 pytest
 
-pydeck==0.4.0b2
+pydeck>=0.4.1
 h3
 
 streamlit
