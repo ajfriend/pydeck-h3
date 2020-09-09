@@ -7,3 +7,5 @@ Helper functions to viz H3 data with https://pydeck.gl/
     + http://awesome-streamlit.org/
 - dstack? https://news.ycombinator.com/item?id=24131723
     + https://dstack.ai/
+
+https://github.com/JetBrains/lets-plot
