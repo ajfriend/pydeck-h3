@@ -30,6 +30,10 @@ Helper functions to viz H3 data with https://pydeck.gl/
     
 record classes?
 
+use pattern matching/dispatch. let user register new things dynamically, change things. make it easy to modify/inspect.
+
+gotta work with string and int representations.
+
 
 ## what's the right, ultimate format?
 
