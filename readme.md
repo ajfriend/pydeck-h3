@@ -43,3 +43,4 @@ what about support for the hexcluster class?
 prolly `dict`: hexcluster -> {key: value} dict
 
 how to idenfity hexcluster? just the set of hexes?
+https://github.com/JetBrains/lets-plot
