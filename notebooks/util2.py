@@ -15,6 +15,42 @@ todo: what if we set `col_height=None` to get a 2d map (and works with DF!)
 MB_KEY = 'pk.eyJ1IjoiYWpmcmllbmQiLCJhIjoiY2pmbmRjczJmMTVkMzJxcW92Y2E4cHZjdCJ9.Jf-gFXU7FOIQxALzPajbdg'
 
 
+def set2cellmap(cells, _pdk=None):
+    def get_pdk():
+        if _pdk is None:
+            return {}
+        else:
+            return _pdk
+
+    cellmap = {
+        h: dict(_pdk=get_pdk())
+        for h in cells
+    }
+
+    return cellmap
+
+
+def dict2cellmap(data, col_val='value'):
+    cellmap = {
+        h: {
+            col_val: v,
+            '_pdk': {} # should this have default values?
+           }
+        for h,v in data.items()
+    }
+
+    return cellmap
+
+
+def cellmap2records(cellmap, col_hex='h3cell'):
+    records = [
+        toolz.merge({col_hex: k}, v)
+        for k, v in cellmap.items()
+    ]
+
+    return records
+
+
 def compute_view(hexes, tilt=False):
     """
     Computes a view based on transforming hexagons
@@ -80,35 +116,9 @@ def normalize_dict(d):
     return d
 
 
-def addcolor(data, cmap='YlOrRd', col_hex='hex', col_val='value', col_color='_color'):
-    """
+from copy import deepcopy
 
-    todo: easy to add a constant color?
-
-    Parameters
-    ----------
-    data : List[Dict[str, Any]]
-        List of hexagon data to plot.
-    cmap : str or matplotlib.Colormap
-        'YlOrRd' or 'YlOrRd_r' to reverse order!
-
-
-    Returns
-    -------
-    Return new list of rows, augmented with `colo_color` column.
-
-    Example
-    -------
-    >>> data = [
-    ...    {'hex': '89283082807ffff', 'value': 1},
-    ...    {'hex': '89283082833ffff', 'value': 0},
-    ...    {'hex': '8928308283bffff', 'value': 9}]
-    >>>
-    >>> addcolor(data, cmap='YlOrRd', col_color='_color')
-    [{'hex': '89283082807ffff', 'value': 1, '_color': (255, 239, 165)},
-     {'hex': '89283082833ffff', 'value': 0, '_color': (255, 255, 204)},
-     {'hex': '8928308283bffff', 'value': 9, '_color': (128, 0, 38)}]
-    """
+def addcolor(cellmap, cmap='YlOrRd', col_val='value'):
     if isinstance(cmap, str):
         cmap = plt.get_cmap(cmap)
 
@@ -117,16 +127,16 @@ def addcolor(data, cmap='YlOrRd', col_hex='hex', col_val='value', col_color='_co
 
         return int(r), int(g), int(b)
 
-    colors = rows2dict(data, col_hex=col_hex, col_val=col_val)
+    colors = {h: v[col_val] for h,v in cellmap.items()}
     colors = normalize_dict(colors)
     colors = toolz.valmap(foo, colors)
 
-    out = [
-        toolz.assoc(row, col_color, colors[row[col_hex]])
-        for row in data
-    ]
+    cellmap = deepcopy(cellmap)
 
-    return out
+    for h, c in colors.items():
+        cellmap[h]['_pdk']['fill_color'] = c
+
+    return cellmap
 
 
 def plot_hexset(hexes, fill_color=(245, 206, 66), opacity=.7, line_width=1):
@@ -157,21 +167,20 @@ def plot_hexset(hexes, fill_color=(245, 206, 66), opacity=.7, line_width=1):
         'line_width': line_width,
     }
 
-    data = [
-        {
-            'h3cell': h,
-            '_pdk_opt': opt,
-        }
-        for h in hexes
-    ]
+    data = set2cellmap(hexes, _pdk=opt)
+
+    ## before this point, have some `prep_hexset` function.
+    # everything below this should be basically the same across functions
+
+    data = cellmap2records(data, col_hex='h3cell')
 
     layer = pdk.Layer(
         'H3HexagonLayer',
         data,
 
         get_hexagon = 'h3cell',
-        get_fill_color = '_pdk_opt.fill_color',
-        get_line_width = '_pdk_opt.line_width',
+        get_fill_color = '_pdk.fill_color',
+        get_line_width = '_pdk.line_width',
 
         pickable = True,
         extruded = False,
@@ -183,6 +192,7 @@ def plot_hexset(hexes, fill_color=(245, 206, 66), opacity=.7, line_width=1):
         initial_view_state = view,
         mapbox_key = MB_KEY,
         map_style = 'mapbox://styles/mapbox/light-v10',
+        tooltip = get_tooltip(data),
     )
 
     return d
@@ -202,20 +212,27 @@ def plot_hexvals(hexvals, cmap='YlOrRd', opacity=.7, line_width=1):
     pydeck.DeckGLWidget
         Renders the map inside a Jupyter Notebook
     """
-    data = dict2rows(hexvals)
-    data = addcolor(data, cmap)
     view = compute_view(hexvals)
 
+    cellmap = dict2cellmap(hexvals)
+    cellmap = addcolor(cellmap, cmap)
+
+    for d in cellmap.values():
+        d['_pdk']['line_width'] = line_width
+
+
+    data = cellmap2records(cellmap, col_hex='h3cell')
     layer = pdk.Layer(
         'H3HexagonLayer',
         data,
-        get_hexagon = 'hex',
+
+        get_hexagon = 'h3cell',
+        get_fill_color = '_pdk.fill_color',
+        get_line_width = '_pdk.line_width', # could fill these _pdk things out automatically...
+
         pickable = True,
         extruded = False,
-
-        opacity = opacity,
-        get_fill_color = '_color',
-        get_line_width = line_width,
+        opacity = opacity
     )
 
     d = pdk.Deck(
@@ -223,7 +240,7 @@ def plot_hexvals(hexvals, cmap='YlOrRd', opacity=.7, line_width=1):
         initial_view_state = view,
         mapbox_key = MB_KEY,
         map_style = 'mapbox://styles/mapbox/light-v10',
-        tooltip = get_tooltip(data, 'value'),
+        tooltip = get_tooltip(data),
     )
 
     return d
@@ -250,17 +267,17 @@ def plot_hexvals3D(hexvals, cmap='YlOrRd', opacity=.7, wireframe=True, elevation
     layer = pdk.Layer(
         'H3HexagonLayer',
         data,
-        get_hexagon = 'hex',
-        pickable = True,
-        extruded = True,
 
-        opacity = opacity,
+        get_hexagon = 'hex',
         get_fill_color = '_color',
         #get_line_width = line_width, # doesn't do anything for 3d
+        get_elevation = 'value',
 
+        pickable = True,
+        extruded = True,
+        opacity = opacity,
         wireframe = wireframe,
         elevation_scale = elevation_scale,
-        get_elevation = 'value',
     )
 
     d = pdk.Deck(
@@ -268,20 +285,18 @@ def plot_hexvals3D(hexvals, cmap='YlOrRd', opacity=.7, wireframe=True, elevation
         initial_view_state = view,
         mapbox_key = MB_KEY,
         map_style = 'mapbox://styles/mapbox/light-v10',
-        tooltip = get_tooltip(data, 'value'),
+        tooltip = get_tooltip(data),
     )
 
     return d
 
 
-def get_tooltip(data, col_hex='hex'):
-    keys = list(data[0].keys())
+def get_tooltip(data):
+    """probably want to make sure the hexid is the first key!
+    """
+    keys = list(data[0].keys()) # wanna check all the keys? not just the first
+
     keys = [k for k in keys if not k.startswith('_')]
-
-    assert col_hex in keys
-
-    keys.remove(col_hex)
-    keys.append(col_hex)
 
     s = '<br/>'.join(
         '<b>{}</b>: {}'.format(k, '{'+k+'}')
@@ -350,7 +365,7 @@ def plot_hexvals4D(
         initial_view_state = view,
         mapbox_key = MB_KEY,
         map_style = 'mapbox://styles/mapbox/light-v10',
-        tooltip = get_tooltip(data, col_hex),
+        tooltip = get_tooltip(data),
     )
     d.prep_data = prep_data
 
