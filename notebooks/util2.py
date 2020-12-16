@@ -115,6 +115,20 @@ def normalize_dict(d):
 
     return d
 
+def get_tooltip(data):
+    """probably want to make sure the hexid is the first key!
+    """
+    keys = list(data[0].keys()) # wanna check all the keys? not just the first
+
+    keys = [k for k in keys if not k.startswith('_')]
+
+    s = '<br/>'.join(
+        '<b>{}</b>: {}'.format(k, '{'+k+'}')
+        for k in keys
+    )
+
+    return {"html": s}
+
 
 from copy import deepcopy
 
@@ -134,7 +148,12 @@ def addcolor(cellmap, cmap='YlOrRd', col_val='value'):
     cellmap = deepcopy(cellmap)
 
     for h, c in colors.items():
-        cellmap[h]['_pdk']['fill_color'] = c
+        d = cellmap[h]
+        if '_pdk' not in  d:
+            d['_pdk'] = {}
+
+        d['_pdk']['fill_color'] = c
+
 
     return cellmap
 
@@ -246,32 +265,28 @@ def plot_hexvals(hexvals, cmap='YlOrRd', opacity=.7, line_width=1):
     return d
 
 
+"""
+should this guy normalize the elevation?
+
+"""
 def plot_hexvals3D(hexvals, cmap='YlOrRd', opacity=.7, wireframe=True, elevation_scale=20):
-    """
-    Plot a collection of hexagons and associated values.
-
-    Parameters
-    ----------
-    hexvals : Dict[str, float]
-        Mapping of hexids to values to plot.
-
-    Returns
-    -------
-    pydeck.DeckGLWidget
-        Renders the map inside a Jupyter Notebook
-    """
-    data = dict2rows(hexvals)
-    data = addcolor(data, cmap)
     view = compute_view(hexvals, tilt=True)
 
+    cellmap = dict2cellmap(hexvals)
+    cellmap = addcolor(cellmap, cmap)
+
+    for d in cellmap.values():
+        d['_pdk']['elevation'] = d['value']
+
+    data = cellmap2records(cellmap, col_hex='h3cell')
     layer = pdk.Layer(
         'H3HexagonLayer',
         data,
 
-        get_hexagon = 'hex',
-        get_fill_color = '_color',
+        get_hexagon = 'h3cell',
+        get_fill_color = '_pdk.fill_color',
         #get_line_width = line_width, # doesn't do anything for 3d
-        get_elevation = 'value',
+        get_elevation = '_pdk.elevation',
 
         pickable = True,
         extruded = True,
@@ -291,23 +306,16 @@ def plot_hexvals3D(hexvals, cmap='YlOrRd', opacity=.7, wireframe=True, elevation
     return d
 
 
-def get_tooltip(data):
-    """probably want to make sure the hexid is the first key!
-    """
-    keys = list(data[0].keys()) # wanna check all the keys? not just the first
-
-    keys = [k for k in keys if not k.startswith('_')]
-
-    s = '<br/>'.join(
-        '<b>{}</b>: {}'.format(k, '{'+k+'}')
-        for k in keys
-    )
-
-    return {"html": s}
 
 
+"""
+todo: something to denote which is color and which is height?
+
+todo: height normalization should have a "start at zero?" option?
+    maybe it should error out if any values are negative?
+"""
 def plot_hexvals4D(
-    data,
+    cellmap,
     col_hex = 'hex',
     col_color = 'val1',
     col_height = 'val2',
@@ -316,48 +324,30 @@ def plot_hexvals4D(
     opacity = .7,
     wireframe = True,
 ):
-    """
-    Plot a collection of hexagons and associated values.
+    view = compute_view(cellmap, tilt=True)
 
-    Parameters
-    ----------
-    data : List[ Dict[str, Any] ]
-        List of properties for each hex.
-        E.g., `{'hex': '89283082807ffff', 'color_val': 6, 'height_val': 1.2}`
+    cellmap = addcolor(cellmap, cmap, col_val=col_color) # this thing needs a better name
+    # col val should be col_color?
 
-    Returns
-    -------
-    pydeck.DeckGLWidget
-        Renders the map inside a Jupyter Notebook
-    """
-    def prep_data(data):
-        if isinstance(data, pd.DataFrame):
-            data = data.to_dict('records')
+    for d in cellmap.values():
+        # we should probably normalize the height, yeah?
+        d['_pdk']['elevation'] = d[col_height]
 
-        # could have this keep track of the colors seen so far...!
-        data = addcolor(data, cmap=cmap, col_hex=col_hex, col_val=col_color, col_color='_color')
-
-        return data
-
-    data = prep_data(data)
-
-    hexes = {r[col_hex] for r in data}
-    view = compute_view(hexes, tilt=True)
-
+    data = cellmap2records(cellmap, col_hex='h3cell')
     layer = pdk.Layer(
         'H3HexagonLayer',
         data,
-        get_hexagon = col_hex,
+
+        get_hexagon = 'h3cell',
+        get_fill_color = '_pdk.fill_color',
+        #get_line_width = line_width, # doesn't do anything for 3d
+        get_elevation = '_pdk.elevation',
+
         pickable = True,
         extruded = True,
-
         opacity = opacity,
-        get_fill_color = '_color',
-        #get_line_width = line_width, # doesn't do anything for 3d
-
         wireframe = wireframe,
         elevation_scale = elevation_scale,
-        get_elevation = col_height,
     )
 
     d = pdk.Deck(
@@ -367,6 +357,5 @@ def plot_hexvals4D(
         map_style = 'mapbox://styles/mapbox/light-v10',
         tooltip = get_tooltip(data),
     )
-    d.prep_data = prep_data
 
     return d
