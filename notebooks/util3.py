@@ -9,6 +9,8 @@ import h3
 todo: list of map tiles that people can use
 todo: explain colormaps
 todo: what if we set `col_height=None` to get a 2d map (and works with DF!)
+
+todo: how to get color and height scaling that works across multiple data sets. need to stay constant for comparison
 """
 
 
@@ -157,6 +159,32 @@ def addcolor(cellmap, cmap='YlOrRd', col_val='value'):
 
     return cellmap
 
+#############################
+
+def plot_general(cellmap, layer_opts):
+    view = compute_view(cellmap, tilt=layer_opts['extruded'])
+
+    data = cellmap2records(cellmap, col_hex='h3cell')
+
+    layer = pdk.Layer(
+        'H3HexagonLayer',
+        data,
+        get_hexagon = 'h3cell',
+        pickable = True,
+        **layer_opts
+    )
+
+    d = pdk.Deck(
+        [layer],
+        initial_view_state = view,
+        mapbox_key = MB_KEY,
+        map_style = 'mapbox://styles/mapbox/light-v10',
+        tooltip = get_tooltip(data),
+    )
+
+    return d
+
+
 
 def _plot2d(
     cellmap,
@@ -171,6 +199,26 @@ def _plot2d(
     )
 
     return plot_general(cellmap, layer_opts)
+
+
+def _plot3d(
+    cellmap,
+    elevation_scale = 20,
+    opacity = .7,
+    wireframe = True,
+):
+    layer_opts = dict(
+        get_fill_color = '_pdk.fill_color',
+        get_elevation = '_pdk.elevation',
+        extruded = True,
+        opacity = opacity,
+        wireframe = wireframe,
+        elevation_scale = elevation_scale,
+    )
+
+    return plot_general(cellmap, layer_opts)
+
+
 
 def plot_hexset(hexes, fill_color=(245, 206, 66), opacity=.7, line_width=1):
     """
@@ -237,22 +285,7 @@ def plot_hexvals(hexvals, cmap='YlOrRd', opacity=.7, line_width=1):
     return plot_general(cellmap, layer_opts)
 
 
-def _plot3d(
-    cellmap,
-    elevation_scale = 20,
-    opacity = .7,
-    wireframe = True,
-):
-    layer_opts = dict(
-        get_fill_color = '_pdk.fill_color',
-        get_elevation = '_pdk.elevation',
-        extruded = True,
-        opacity = opacity,
-        wireframe = wireframe,
-        elevation_scale = elevation_scale,
-    )
 
-    return plot_general(cellmap, layer_opts)
 
 
 """
@@ -274,6 +307,8 @@ todo: something to denote which is color and which is height?
 
 todo: height normalization should have a "start at zero?" option?
     maybe it should error out if any values are negative?
+
+    need to make `normalize` optional, if users want plots to maintain scale between multiple maps
 """
 def plot_hexvals4D(
     cellmap,
@@ -296,25 +331,4 @@ def plot_hexvals4D(
 
 
 
-def plot_general(cellmap, layer_opts):
-    view = compute_view(cellmap, tilt=layer_opts['extruded'])
 
-    data = cellmap2records(cellmap, col_hex='h3cell')
-
-    layer = pdk.Layer(
-        'H3HexagonLayer',
-        data,
-        get_hexagon = 'h3cell',
-        pickable = True,
-        **layer_opts
-    )
-
-    d = pdk.Deck(
-        [layer],
-        initial_view_state = view,
-        mapbox_key = MB_KEY,
-        map_style = 'mapbox://styles/mapbox/light-v10',
-        tooltip = get_tooltip(data),
-    )
-
-    return d
