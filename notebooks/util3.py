@@ -158,6 +158,20 @@ def addcolor(cellmap, cmap='YlOrRd', col_val='value'):
     return cellmap
 
 
+def _plot2d(
+    cellmap,
+    opacity = .7,
+    line_width = 1
+):
+    layer_opts = dict(
+        get_fill_color = '_pdk.fill_color',
+        get_line_width = '_pdk.line_width',
+        extruded = False,
+        opacity = opacity
+    )
+
+    return plot_general(cellmap, layer_opts)
+
 def plot_hexset(hexes, fill_color=(245, 206, 66), opacity=.7, line_width=1):
     """
     Plot a collection of hexagons.
@@ -188,14 +202,7 @@ def plot_hexset(hexes, fill_color=(245, 206, 66), opacity=.7, line_width=1):
 
     cellmap = set2cellmap(hexes, _pdk=opt)
 
-    layer_opts = dict(
-        get_fill_color = '_pdk.fill_color',
-        get_line_width = '_pdk.line_width',
-        extruded = False,
-        opacity = opacity
-    )
-
-    return plot_general(cellmap, layer_opts)
+    return _plot2d(cellmap, opacity=opacity, line_width=line_width)
 
 
 def plot_hexvals(hexvals, cmap='YlOrRd', opacity=.7, line_width=1):
@@ -230,6 +237,24 @@ def plot_hexvals(hexvals, cmap='YlOrRd', opacity=.7, line_width=1):
     return plot_general(cellmap, layer_opts)
 
 
+def _plot3d(
+    cellmap,
+    elevation_scale = 20,
+    opacity = .7,
+    wireframe = True,
+):
+    layer_opts = dict(
+        get_fill_color = '_pdk.fill_color',
+        get_elevation = '_pdk.elevation',
+        extruded = True,
+        opacity = opacity,
+        wireframe = wireframe,
+        elevation_scale = elevation_scale,
+    )
+
+    return plot_general(cellmap, layer_opts)
+
+
 """
 should this guy normalize the elevation?
 
@@ -242,19 +267,7 @@ def plot_hexvals3D(hexvals, cmap='YlOrRd', opacity=.7, wireframe=True, elevation
     for d in cellmap.values():
         d['_pdk']['elevation'] = d['value']
 
-
-    layer_opts = dict(
-        get_fill_color = '_pdk.fill_color',
-        #get_line_width = '_pdk.line_width',  # doesn't do anything in 3d
-        get_elevation = '_pdk.elevation',
-        extruded = True,
-        opacity = opacity,
-        wireframe = wireframe,
-        elevation_scale = elevation_scale,
-    )
-
-    return plot_general(cellmap, layer_opts)
-
+    return _plot3d(cellmap, opacity=opacity, wireframe=wireframe, elevation_scale=elevation_scale)
 
 """
 todo: something to denote which is color and which is height?
@@ -272,8 +285,6 @@ def plot_hexvals4D(
     opacity = .7,
     wireframe = True,
 ):
-    view = compute_view(cellmap, tilt=True)
-
     cellmap = addcolor(cellmap, cmap, col_val=col_color) # this thing needs a better name
     # col val should be col_color?
 
@@ -281,32 +292,8 @@ def plot_hexvals4D(
         # we should probably normalize the height, yeah?
         d['_pdk']['elevation'] = d[col_height]
 
-    data = cellmap2records(cellmap, col_hex='h3cell')
-    layer = pdk.Layer(
-        'H3HexagonLayer',
-        data,
+    return _plot3d(cellmap, opacity=opacity, wireframe=wireframe, elevation_scale=elevation_scale)
 
-        get_hexagon = 'h3cell',
-        get_fill_color = '_pdk.fill_color',
-        #get_line_width = line_width, # doesn't do anything for 3d
-        get_elevation = '_pdk.elevation',
-
-        pickable = True,
-        extruded = True,
-        opacity = opacity,
-        wireframe = wireframe,
-        elevation_scale = elevation_scale,
-    )
-
-    d = pdk.Deck(
-        [layer],
-        initial_view_state = view,
-        mapbox_key = MB_KEY,
-        map_style = 'mapbox://styles/mapbox/light-v10',
-        tooltip = get_tooltip(data),
-    )
-
-    return d
 
 
 def plot_general(cellmap, layer_opts):
