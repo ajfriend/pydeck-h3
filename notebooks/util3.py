@@ -179,42 +179,23 @@ def plot_hexset(hexes, fill_color=(245, 206, 66), opacity=.7, line_width=1):
     Currently can only plot hexagons which are all the same resolution.
     Issue raised here: https://github.com/uber/deck.gl/issues/4329
     """
-    view = compute_view(hexes)
 
+    # each cell has the same color and line width so we re-use the dict
     opt = {
         'fill_color': fill_color,
         'line_width': line_width,
     }
 
-    data = set2cellmap(hexes, _pdk=opt)
+    cellmap = set2cellmap(hexes, _pdk=opt)
 
-    ## before this point, have some `prep_hexset` function.
-    # everything below this should be basically the same across functions
-
-    data = cellmap2records(data, col_hex='h3cell')
-
-    layer = pdk.Layer(
-        'H3HexagonLayer',
-        data,
-
-        get_hexagon = 'h3cell',
+    layer_opts = dict(
         get_fill_color = '_pdk.fill_color',
         get_line_width = '_pdk.line_width',
-
-        pickable = True,
         extruded = False,
         opacity = opacity
     )
 
-    d = pdk.Deck(
-        [layer],
-        initial_view_state = view,
-        mapbox_key = MB_KEY,
-        map_style = 'mapbox://styles/mapbox/light-v10',
-        tooltip = get_tooltip(data),
-    )
-
-    return d
+    return plot_general(cellmap, layer_opts)
 
 
 def plot_hexvals(hexvals, cmap='YlOrRd', opacity=.7, line_width=1):
@@ -231,7 +212,6 @@ def plot_hexvals(hexvals, cmap='YlOrRd', opacity=.7, line_width=1):
     pydeck.DeckGLWidget
         Renders the map inside a Jupyter Notebook
     """
-    view = compute_view(hexvals)
 
     cellmap = dict2cellmap(hexvals)
     cellmap = addcolor(cellmap, cmap)
@@ -240,29 +220,14 @@ def plot_hexvals(hexvals, cmap='YlOrRd', opacity=.7, line_width=1):
         d['_pdk']['line_width'] = line_width
 
 
-    data = cellmap2records(cellmap, col_hex='h3cell')
-    layer = pdk.Layer(
-        'H3HexagonLayer',
-        data,
-
-        get_hexagon = 'h3cell',
+    layer_opts = dict(
         get_fill_color = '_pdk.fill_color',
-        get_line_width = '_pdk.line_width', # could fill these _pdk things out automatically...
-
-        pickable = True,
+        get_line_width = '_pdk.line_width',
         extruded = False,
         opacity = opacity
     )
 
-    d = pdk.Deck(
-        [layer],
-        initial_view_state = view,
-        mapbox_key = MB_KEY,
-        map_style = 'mapbox://styles/mapbox/light-v10',
-        tooltip = get_tooltip(data),
-    )
-
-    return d
+    return plot_general(cellmap, layer_opts)
 
 
 """
@@ -270,7 +235,6 @@ should this guy normalize the elevation?
 
 """
 def plot_hexvals3D(hexvals, cmap='YlOrRd', opacity=.7, wireframe=True, elevation_scale=20):
-    view = compute_view(hexvals, tilt=True)
 
     cellmap = dict2cellmap(hexvals)
     cellmap = addcolor(cellmap, cmap)
@@ -278,35 +242,18 @@ def plot_hexvals3D(hexvals, cmap='YlOrRd', opacity=.7, wireframe=True, elevation
     for d in cellmap.values():
         d['_pdk']['elevation'] = d['value']
 
-    data = cellmap2records(cellmap, col_hex='h3cell')
 
-    layer = pdk.Layer(
-        'H3HexagonLayer',
-        data,
-
-        get_hexagon = 'h3cell',
+    layer_opts = dict(
         get_fill_color = '_pdk.fill_color',
-        #get_line_width = line_width, # doesn't do anything for 3d
+        #get_line_width = '_pdk.line_width',  # doesn't do anything in 3d
         get_elevation = '_pdk.elevation',
-
-        pickable = True,
         extruded = True,
         opacity = opacity,
         wireframe = wireframe,
         elevation_scale = elevation_scale,
     )
 
-    d = pdk.Deck(
-        [layer],
-        initial_view_state = view,
-        mapbox_key = MB_KEY,
-        map_style = 'mapbox://styles/mapbox/light-v10',
-        tooltip = get_tooltip(data),
-    )
-
-    return d
-
-
+    return plot_general(cellmap, layer_opts)
 
 
 """
@@ -349,6 +296,30 @@ def plot_hexvals4D(
         opacity = opacity,
         wireframe = wireframe,
         elevation_scale = elevation_scale,
+    )
+
+    d = pdk.Deck(
+        [layer],
+        initial_view_state = view,
+        mapbox_key = MB_KEY,
+        map_style = 'mapbox://styles/mapbox/light-v10',
+        tooltip = get_tooltip(data),
+    )
+
+    return d
+
+
+def plot_general(cellmap, layer_opts):
+    view = compute_view(cellmap, tilt=layer_opts['extruded'])
+
+    data = cellmap2records(cellmap, col_hex='h3cell')
+
+    layer = pdk.Layer(
+        'H3HexagonLayer',
+        data,
+        get_hexagon = 'h3cell',
+        pickable = True,
+        **layer_opts
     )
 
     d = pdk.Deck(
