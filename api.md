@@ -19,3 +19,29 @@ plot_hexvals4D(
     opacity = .7,
     wireframe = True,
 ):
+
+## **internal** interface
+
+everything takes in a hexvals: hexid -> dict
+
+hexvals/hexmap/hexdict? best name?
+
+def plot_hexmap(hexmap, color=None, height=None)
+
+if both None: set
+if color not none: 
+if height not none: 3d
+
+but how to distinguish color name 'YlGn' from column name? don't worry! this is the *internal api*! we can make it mean whatever we want
+
+what if it **just** takes in a hexmap? look at the first `_pdk` dict to see what we need
+
+## new plan
+
+takes in list of dicts (rows)
+
+
+plot2d(rows, default_color='yellow', col_hex=None, col_color=None, color_map='blah')
+
+todo: easy way to make the colors consistent across maps?
+
