@@ -36,12 +36,15 @@ def compute_view(hexes, tilt=False):
 
     return view
 
-def get_tooltip(row):
+def get_tooltip(keys, hide_underscored=True):
     """probably want to make sure the hexid is the first key!
-    """
-    keys = list(row.keys()) # wanna check all the keys? not just the first
 
-    keys = [k for k in keys if not k.startswith('_')]
+    keys: list of strings, or dict with strings for keys
+    """
+    keys = list(keys)
+
+    if hide_underscored:
+        keys = [k for k in keys if not k.startswith('_')]
 
     s = '<br/>'.join(
         '<b>{}</b>: {}'.format(k, '{'+k+'}')
@@ -56,18 +59,17 @@ def get_tooltip(row):
 
 # maybe this is just a transform function (doesn't call the map)
 # it just transforms a row form to the row form with _pdk
+# just a transform will be easier to test
 def plot2d(
     rows,
     col_hex,
 
-    col_color = None,
-    color = (245, 206, 66),  # default/fallback
+    # bah, need a record type. importing a function should automatically import its record type constructor (in something like ML, or C even!)
+    color = (245, 206, 66),  # dispatch on string vs tuple. or give the user a utility function u.color('yellow'). if string given, assumed that's the name of a column
+    cmap = 'YlOrRd',  # let this thing take in a function (if we want global coloring, the function has to do the pre-normalization itself; the function will only look at one element at a time)
 
-    line_width = 1,
-    col_line_width = None,  # less common: want to have different line widths by hex
-
+    line_width = 1, # dispatch on numeric vs string vs function
     opacity = .7,
-    cmap = None,
 ):
     """
     line_width: int, float, or str to denote column name
@@ -93,7 +95,7 @@ def plot2d(
 
 
 # this all ya really need?
-def _plot2d(rows, opacity=.7):
+def _plot2d(rows, opacity=.7, hide_underscored=True):
     """
     _pdk.h3cell: str
     _pdk.line_width: int, float
@@ -109,18 +111,19 @@ def _plot2d(rows, opacity=.7):
         rows,
         pickable = True,
         extruded = False,
-        get_hexagon = '_pdk.h3cell',  ## this is better. _pdk is the *real* data, forget about the user input dict, that's metadata. think about the things we actually need for the plot
-        get_fill_color = '_pdk.fill_color',
-        get_line_width = '_pdk.line_width',
         opacity = opacity,
+
+        get_hexagon    = '_pdk_h3cell',
+        get_fill_color = '_pdk_fill_color',
+        get_line_width = '_pdk_line_width',
     )
 
-    view = compute_view({r['_pdk']['h3cell'] for r in rows})
-    tooltip = get_tooltip(rows[0])
+    hexes = {r['_pdk_h3cell'] for r in rows}
+    tooltip = get_tooltip(rows[0], hide_underscored=hide_underscored)
 
     d = pdk.Deck(
         [layer],
-        initial_view_state = view,
+        initial_view_state = compute_view(hexes),
         tooltip = tooltip,
         mapbox_key = MB_KEY,
         map_style = 'mapbox://styles/mapbox/light-v10',
@@ -129,48 +132,28 @@ def _plot2d(rows, opacity=.7):
     return d
 
 
-def plot3d(rows, col_hex, line_width=2.0, opacity=.7, default_color=(245, 206, 66)):
-    # make a copy so we can modify the row dictionaries
-    rows = [
-        dict(row)
-        for row in rows
-    ]
-
-    # need a color processing step
-    _pdk = {
-        'fill_color': default_color,
-        'elevation': 20,
-    }
-
-    for row in rows:
-        row['_pdk'] = _pdk
-
-    return _plot3d(rows, col_hex)
-
-
-def _plot3d(rows, opacity=.7, wireframe=False, elevation_scale=20):
-
-    view = compute_view({r['_pdk']['h3cell'] for r in rows}, tilt=True)
-    tooltip = get_tooltip(rows[0])
+def _plot3d(rows, opacity=.7, wireframe=False, elevation_scale=20, hide_underscored=True):
 
     layer = pdk.Layer(
         'H3HexagonLayer',
         rows,
         pickable = True,
         extruded = True,
-
-        get_hexagon = '_pdk.h3cell',
-        get_fill_color = '_pdk.fill_color',
-        get_elevation = '_pdk.elevation',
         elevation_scale = elevation_scale,
-
         wireframe = wireframe,
         opacity = opacity,
+
+        get_hexagon    = '_pdk_h3cell',
+        get_fill_color = '_pdk_fill_color',
+        get_elevation  = '_pdk_elevation',
     )
+
+    hexes = {r['_pdk_h3cell'] for r in rows}
+    tooltip = get_tooltip(rows[0], hide_underscored=hide_underscored)
 
     d = pdk.Deck(
         [layer],
-        initial_view_state = view,
+        initial_view_state = compute_view(hexes, tilt=True),
         tooltip = tooltip,
         mapbox_key = MB_KEY,
         map_style = 'mapbox://styles/mapbox/light-v10',
