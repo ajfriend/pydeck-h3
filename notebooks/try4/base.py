@@ -1,3 +1,7 @@
+"""
+Basic 2D and 3D plotting; takes in a list of dictionaries
+"""
+
 import pydeck as pdk
 import h3
 
@@ -7,9 +11,11 @@ MB_KEY = 'pk.eyJ1IjoiYWpmcmllbmQiLCJhIjoiY2pmbmRjczJmMTVkMzJxcW92Y2E4cHZjdCJ9.Jf
 
 def plot2d(rows, opacity=.7, hide_underscored=True):
     """
-    _pdk.h3cell: str
-    _pdk.line_width: int, float
-    _pdk.fill_color: rgb or rgba tuples
+    rows is a list of dictionaries, each with the keys
+
+    _pdk_h3cell: str
+    _pdk_line_width: int, float
+    _pdk_fill_color: rgb or rgba tuples
 
     opacity is multiplicative
 
