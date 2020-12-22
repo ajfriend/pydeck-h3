@@ -1,6 +1,6 @@
 import toolz
 
-from .util import get_scaled_cmap
+from .util import get_scaled_cmap, transpose
 
 
 def color_helper(rows, color, cmap='YlOrRd'):
@@ -62,22 +62,22 @@ def make_pdk_rows(
     cols = toolz.merge(
         # maybe an identity helper???
         color_helper(rows, color, cmap='YlOrRd'),
-        line_width_helper(rows, line_width=1),
-        height_helper(rows, height=None),
+        #line_width_helper(rows, line_width=1),
+        height_helper(rows, height=height),
         hex_helper(rows, col_hex),
     )
 
-    # pdk_rows = [
-    #     {
-    #         **row,
-    #         '_pdk_h3cell': row[col_hex],
-    #         '_pdk_fill_color': color,
-    #         '_pdk_line_width': line_width,
-    #     }
-    #     for row, color, line_width in zip(rows, colors, line_widths)
-    # ]
+    _rows = transpose(cols)
 
-    return cols
+    pdk_rows = [
+        {
+            **row,
+            **_row
+        }
+        for row, _row in zip(rows, _rows)
+    ]
+
+    return pdk_rows
 
 
 
