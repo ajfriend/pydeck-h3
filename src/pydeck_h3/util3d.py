@@ -26,7 +26,7 @@ def line_width_helper(rows, line_width=1):
     else:
         line_widths = (line_width for _ in rows)
 
-    return {'_pdk_line_width': line_width}
+    return {'_pdk_line_width': line_widths}
 
 
 def height_helper(rows, height=None):
@@ -67,17 +67,17 @@ def make_pdk_rows(
         hex_helper(rows, col_hex),
     )
 
-    pdk_rows = [
-        {
-            **row,
-            '_pdk_h3cell': row[col_hex],
-            '_pdk_fill_color': color,
-            '_pdk_line_width': line_width,
-        }
-        for row, color, line_width in zip(rows, colors, line_widths)
-    ]
+    # pdk_rows = [
+    #     {
+    #         **row,
+    #         '_pdk_h3cell': row[col_hex],
+    #         '_pdk_fill_color': color,
+    #         '_pdk_line_width': line_width,
+    #     }
+    #     for row, color, line_width in zip(rows, colors, line_widths)
+    # ]
 
-    return pdk_rows
+    return cols
 
 
 

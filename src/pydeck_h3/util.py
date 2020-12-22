@@ -34,3 +34,14 @@ def get_scaled_cmap(cmap='YlOrRd', lower=0.0, upper=1.0):
         return r,g,b,a
 
     return foo
+
+
+def transpose(d):
+    keys = list(d.keys())
+    row_tuples = zip(*(d[k] for k in keys))
+    out = [
+        dict(zip(keys, rt))
+        for rt in row_tuples
+    ]
+
+    return out
