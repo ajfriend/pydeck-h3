@@ -1,3 +1,6 @@
+pydeck>=0.4.1
+h3
+
 jupyterlab
 
 pandas>=1.0.0
@@ -8,5 +11,4 @@ matplotlib
 toolz
 pytest
 
-pydeck>=0.4.1
-h3
+
