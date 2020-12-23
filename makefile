@@ -24,3 +24,4 @@ purge: clean
 
 test:
 	env/bin/pytest
+	env/bin/pytest --doctest-modules src
