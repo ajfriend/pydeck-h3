@@ -1,4 +1,3 @@
-MB_KEY = 'pk.eyJ1IjoiYWpmcmllbmQiLCJhIjoiY2pmbmRjczJmMTVkMzJxcW92Y2E4cHZjdCJ9.Jf-gFXU7FOIQxALzPajbdg'
 
 
 def get_layer_params2d(*, opacity=.7, **kwargs):
