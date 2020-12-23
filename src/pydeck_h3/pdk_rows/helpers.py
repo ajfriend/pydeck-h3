@@ -28,6 +28,7 @@ def line_width_helper(rows, line_width=1):
     if isinstance(line_width, str):
         line_widths = (row[line_width] for row in rows)
     else:
+        # assume line_width is a fixed number
         line_widths = (line_width for _ in rows)
 
     line_widths = list(line_widths) # can make a pure generator, if we ever want

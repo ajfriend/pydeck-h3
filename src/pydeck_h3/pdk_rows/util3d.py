@@ -1,30 +1,31 @@
 import toolz
 
 from .util import transpose
-from .helpers import color_helper, height_helper, hex_helper
+from .helpers import color_helper, height_helper, hex_helper, line_width_helper
 
 
 def make_pdk_rows(
     rows,
-    col_hex,
+    col_hex, # how's this gonna generalize when we have hex sets?
 
     color = (245, 206, 66), # tuple or string
     cmap = 'YlOrRd', #string or callable, but this function doesn't check
-
-    height = None,
     line_width = 1,
+    height = None,
 ):
-    # have functions that return a dict with key like _pdk_fill_color: iterator
-    # then we can just zip up all the iterators at the end
-    #
-    cols = toolz.merge(
-        # maybe an identity helper???
-        color_helper(rows, color, cmap='YlOrRd'),
-        #line_width_helper(rows, line_width=1),
-        height_helper(rows, height=height),
+    # maybe an identity helper???
+    cols = [
         hex_helper(rows, col_hex),
-    )
+        color_helper(rows, color, cmap=cmap),
+    ]
 
+    if height is None:
+        cols += [line_width_helper(rows, line_width=line_width)]
+    else:
+        cols += [height_helper(rows, height=height)]
+
+
+    cols = toolz.merge(*cols)
     _rows = transpose(cols)
 
     pdk_rows = [
