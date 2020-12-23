@@ -56,13 +56,9 @@ rows3d = [
 ]
 
 
-def test_2d():
-    layer_params, deck_params = pdh.params.get_plot_params(
-        rows2d,
-        opacity=.3,
-        hide_underscored=True,
-    )
+def test_2d_layer():
 
+    layer_params = pdh.params.get_layer_params(rows2d, opacity=.3)
     layer_expected = {
         'pickable': True,
         'extruded': False,
@@ -74,6 +70,10 @@ def test_2d():
 
     assert layer_params == approx(layer_expected)
 
+
+def test_2d_deck():
+
+    deck_params = pdh.params.get_deck_params(rows2d, hide_underscored=True)
     deck_expected = {
         'initial_view_state': {"latitude": 37.776346003249365, "longitude": -122.42312111464462, "zoom": 16},
         'tooltip': {'html': '<b>h3cell</b>: {h3cell}<br/><b>cats</b>: {cats}<br/><b>dogs</b>: {dogs}'},
@@ -89,13 +89,12 @@ def test_2d():
     assert deck_params == deck_expected
 
 
-def test_3d():
-    layer_params, deck_params = pdh.params.get_plot_params(
+def test_3d_layer():
+    layer_params = pdh.params.get_layer_params(
         rows3d,
-        opacity=.123,
-        wireframe=True,
-        elevation_scale=123,
-        hide_underscored=True,
+        opacity = .123,
+        wireframe = True,
+        elevation_scale = 123,
     )
 
     layer_expected = {

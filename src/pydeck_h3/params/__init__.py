@@ -1,1 +1,2 @@
-from .plot import get_plot_params
+from .deck import get_deck_params
+from .layer import get_layer_params
