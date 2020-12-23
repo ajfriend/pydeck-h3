@@ -35,7 +35,7 @@ def test_2d():
         }
     ]
 
-    out = pdh.pdk_rows.util2d.make_pdk_rows(
+    out = pdh.pdk_rows.utilNd.make_pdk_rows(
         rain_data,
         'h3cell',
         color = 'cats',
@@ -74,7 +74,7 @@ def test_3d():
         }
     ]
 
-    out = pdh.pdk_rows.util3d.make_pdk_rows(
+    out = pdh.pdk_rows.utilNd.make_pdk_rows(
         rain_data,
         'h3cell',
         color = 'cats',
