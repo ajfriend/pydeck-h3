@@ -1,6 +1,6 @@
 import pandas as pd
 
-def format(x):
+def dispatch(x):
     funcs = [
         from_list,
         from_set,
