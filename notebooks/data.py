@@ -1,3 +1,5 @@
+import pandas as pd
+
 rows = [
     {'h3cell': '89283082807ffff', 'cats': 6, 'dogs': 15},
     {'h3cell': '89283082833ffff', 'cats': 0, 'dogs': 5},
@@ -19,3 +21,19 @@ rows = [
     {'h3cell': '892830828abffff', 'cats': 4, 'dogs': 11},
     {'h3cell': '8928308288bffff', 'cats': 1, 'dogs': 8}
 ]
+
+
+df = pd.DataFrame(rows)
+hexset = set(df['h3cell'])
+series = df.set_index('h3cell')['cats']
+
+#hexdict = dict(df.set_index('h3cell')['cats']) # this one doesn't work because it gives numpy.int64s
+hexdict = series.to_dict()
+
+data = {
+    'rows': rows,
+    'df': df,
+    'hexset': hexset,
+    'series': series,
+    'hexdict': hexdict,
+}
