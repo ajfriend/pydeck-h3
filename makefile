@@ -25,3 +25,10 @@ purge: clean
 test:
 	env/bin/pytest
 	env/bin/pytest --doctest-modules src
+
+
+github: purge
+	python -m venv env
+	env/bin/pip install --upgrade pip wheel
+	env/bin/pip install -r requirements.txt
+	env/bin/pip install git+https://github.com/ajfriend/pydeck-h3
