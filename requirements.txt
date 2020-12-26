@@ -1,5 +1,6 @@
 pydeck>=0.4.1
 h3
+shapely
 
 jupyterlab
 
