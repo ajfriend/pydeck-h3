@@ -1,3 +1,4 @@
+jedi<0.18.0  # until fix: https://github.com/ipython/ipython/issues/12740
 pydeck>=0.4.1
 h3
 shapely
