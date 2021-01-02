@@ -1,4 +1,5 @@
 import pydeck as pdk
+import numpy as np
 
 
 MB_KEY = 'pk.eyJ1IjoiYWpmcmllbmQiLCJhIjoiY2pmbmRjczJmMTVkMzJxcW92Y2E4cHZjdCJ9.Jf-gFXU7FOIQxALzPajbdg'
@@ -36,6 +37,27 @@ def make_pdk_rows(
 
 
 def plot(data, col_hex='hexset', col_color='color', cmap='YlOrRd', line_width=100, opacity=0.7):
+    """
+    data is a list of dictionaries.
+
+    !!! currently mutates input!
+    """
+
+    # just to make it so we don't mutate `data`
+    data = [
+        dict(row)
+        for row in data
+    ]
+
+    # if we don't find a color column, just add random values
+    # todo: super hacky, gotta fix and make not mutate
+    if col_color not in data[0].keys():
+        for row in data:
+            row[col_color] = int(np.random.randint(len(data)))
+
+    # sets don't parse to json, so make sure the hexset is a row
+    for row in data:
+        row[col_hex] = list(row[col_hex])
 
     data = make_pdk_rows(data, col_color, cmap=cmap)
 
