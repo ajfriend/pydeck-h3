@@ -12,6 +12,8 @@ setup(
     ),
     package_dir = {'': 'src'},
 
+    install_requires = ['pydeck','h3'],
+
     # extras_require={
     #     'numpy': ['numpy'],
     #     'test': ['pytest', 'pytest-cov', 'flake8'],
