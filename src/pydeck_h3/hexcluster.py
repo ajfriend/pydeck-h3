@@ -1,5 +1,6 @@
 import pydeck as pdk
 import numpy as np
+import h3
 
 
 MB_KEY = 'pk.eyJ1IjoiYWpmcmllbmQiLCJhIjoiY2pmbmRjczJmMTVkMzJxcW92Y2E4cHZjdCJ9.Jf-gFXU7FOIQxALzPajbdg'
@@ -74,13 +75,19 @@ def plot(data, col_hex='hexset', col_color='color', cmap='YlOrRd', line_width=10
         opacity = opacity,
     )
 
+    hexes = set.union(*[
+        set(row[col_hex])
+        for row in data
+    ])
 
-    view_state = pdk.ViewState(latitude=37.7749295, longitude=-122.4194155, zoom=9)
+    view = pdk.data_utils.compute_view(
+        [h3.h3_to_geo(h)[::-1] for h in hexes]
+    )
 
 
     deck = pdk.Deck(
-        layers=[layer],
-        initial_view_state=view_state,
+        layers = [layer],
+        initial_view_state = view,
         mapbox_key = MB_KEY,
         map_style = 'mapbox://styles/mapbox/light-v10',
     )
