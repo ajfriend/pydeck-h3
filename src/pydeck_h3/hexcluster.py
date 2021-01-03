@@ -1,5 +1,6 @@
 import pydeck as pdk
 import numpy as np
+import pandas as pd
 import h3
 
 
@@ -39,10 +40,14 @@ def make_pdk_rows(
 
 def plot(data, col_hex='hexset', col_color='color', cmap='YlOrRd', line_width=100, opacity=0.7):
     """
-    data is a list of dictionaries.
+    data is a list of dictionaries
+    OR: if it is a dataframe, it is converted to a list of dictionaries
 
-    !!! currently mutates input!
+    !!! currently mutates input! (maybe no longer..)
     """
+
+    if isinstance(data, pd.DataFrame):
+        data = data.to_dict('records')
 
     # just to make it so we don't mutate `data`
     data = [
@@ -102,6 +107,9 @@ def plot3d(data, col_hex='hexset', col_color='color', cmap='YlOrRd', opacity=0.7
 
     !!! currently mutates input!
     """
+
+    if isinstance(data, pd.DataFrame):
+        data = data.to_dict('records')
 
     # just to make it so we don't mutate `data`
     data = [
