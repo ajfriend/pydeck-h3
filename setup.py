@@ -12,7 +12,7 @@ setup(
     ),
     package_dir = {'': 'src'},
 
-    install_requires = ['pydeck','h3'],
+    install_requires = ['pydeck','h3', 'pandas', 'toolz', 'matplotlib'],
 
     # extras_require={
     #     'numpy': ['numpy'],
