@@ -224,6 +224,32 @@
 </dd></dl>
 
 <dl class="py function">
+<dt id="pydeck_h3.base.plot">
+<code class="sig-prename descclassname">pydeck_h3.base.</code><code class="sig-name descname">plot</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">data</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pydeck_h3/base.html#plot"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pydeck_h3.base.plot" title="Permalink to this definition">¶</a></dt>
+<dd><p>Hello there</p>
+<p>todo: but how to describe default values?
+todo: where am i actually “using” the default param behavior?
+todo: test/issue for the numpy int error?</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>data</strong> (<em>list</em><em>[</em><em>dict</em><em>]</em><em>, </em><em>set</em><em>, </em><em>list</em><em>[</em><em>str</em><em>]</em><em>, </em><em>tuple</em><em>[</em><em>str</em><em>]</em><em>, </em><em>dict</em><em>[</em><em>str-&gt;number</em><em>]</em><em>, </em><em>pandas.DataFrame</em><em>, </em><em>pandas.Series</em>) – Data to plot</p></li>
+<li><p><strong>col_hex</strong> (<em>str</em>) – In the case of record data (list[dict] or DataFrame), name of column containing H3 cell index</p></li>
+<li><p><strong>color</strong> (<em>3-tuple</em><em>[</em><em>int</em><em>]</em><em>, </em><em>4-tuple</em><em>[</em><em>int</em><em>]</em><em>, </em><em>str</em>) – If a tuple, gives the RGB/RGBA color to color all hexes; values in [0, 255]
+If str, gives the name of the column with number values that should be mapped to colors</p></li>
+<li><p><strong>cmap</strong> (<em>str</em><em> or </em><em>callable</em>) – </p></li>
+<li><p><strong>line_width</strong> (<em>number</em><em> or </em><em>str</em>) – </p></li>
+<li><p><strong>height</strong> (<em>None</em><em>, </em><em>number</em><em>, or </em><em>str.</em>) – </p></li>
+<li><p><strong>opacity</strong> (<em>float</em>) – [0, 1] for all hexagons. for changing the opacity of specific hexagons, color them with an RGBA value</p></li>
+<li><p><strong>wireframe</strong> (<em>bool</em>) – </p></li>
+<li><p><strong>elevation_scale</strong> (<em>float</em>) – </p></li>
+<li><p><strong>hide_underscored</strong> (<em>bool</em>) – </p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
 <dt id="numpy.random.randn">
 <code class="sig-prename descclassname">numpy.random.</code><code class="sig-name descname">randn</code><span class="sig-paren">(</span><em class="sig-param">d0</em>, <em class="sig-param">d1</em>, <em class="sig-param">...</em>, <em class="sig-param">dn</em><span class="sig-paren">)</span><a class="headerlink" href="#numpy.random.randn" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return a sample (or samples) from the “standard normal” distribution.</p>
@@ -301,12 +327,49 @@ no parameters were supplied.</p>
 <col style="width: 90%" />
 </colgroup>
 <tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#pydeck_h3.plot" title="pydeck_h3.plot"><code class="xref py py-obj docutils literal notranslate"><span class="pre">plot</span></code></a>(data, **kwargs)</p></td>
+<td><p>Hello there</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#pydeck_h3.dispatch" title="pydeck_h3.dispatch"><code class="xref py py-obj docutils literal notranslate"><span class="pre">dispatch</span></code></a>(x)</p></td>
+<td><p></p></td>
+</tr>
 </tbody>
 </table>
 </div>
 <div class="section" id="pretend-this-is-a-new-section">
 <h2>pretend this is a new section<a class="headerlink" href="#pretend-this-is-a-new-section" title="Permalink to this headline">¶</a></h2>
 <p>have all sorts of stuff</p>
+<span class="target" id="module-pydeck_h3"></span><dl class="py function">
+<dt id="pydeck_h3.dispatch">
+<code class="sig-prename descclassname">pydeck_h3.</code><code class="sig-name descname">dispatch</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">x</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pydeck_h3/dispatch.html#dispatch"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pydeck_h3.dispatch" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt id="pydeck_h3.plot">
+<code class="sig-prename descclassname">pydeck_h3.</code><code class="sig-name descname">plot</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">data</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pydeck_h3/base.html#plot"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pydeck_h3.plot" title="Permalink to this definition">¶</a></dt>
+<dd><p>Hello there</p>
+<p>todo: but how to describe default values?
+todo: where am i actually “using” the default param behavior?
+todo: test/issue for the numpy int error?</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>data</strong> (<em>list</em><em>[</em><em>dict</em><em>]</em><em>, </em><em>set</em><em>, </em><em>list</em><em>[</em><em>str</em><em>]</em><em>, </em><em>tuple</em><em>[</em><em>str</em><em>]</em><em>, </em><em>dict</em><em>[</em><em>str-&gt;number</em><em>]</em><em>, </em><em>pandas.DataFrame</em><em>, </em><em>pandas.Series</em>) – Data to plot</p></li>
+<li><p><strong>col_hex</strong> (<em>str</em>) – In the case of record data (list[dict] or DataFrame), name of column containing H3 cell index</p></li>
+<li><p><strong>color</strong> (<em>3-tuple</em><em>[</em><em>int</em><em>]</em><em>, </em><em>4-tuple</em><em>[</em><em>int</em><em>]</em><em>, </em><em>str</em>) – If a tuple, gives the RGB/RGBA color to color all hexes; values in [0, 255]
+If str, gives the name of the column with number values that should be mapped to colors</p></li>
+<li><p><strong>cmap</strong> (<em>str</em><em> or </em><em>callable</em>) – </p></li>
+<li><p><strong>line_width</strong> (<em>number</em><em> or </em><em>str</em>) – </p></li>
+<li><p><strong>height</strong> (<em>None</em><em>, </em><em>number</em><em>, or </em><em>str.</em>) – </p></li>
+<li><p><strong>opacity</strong> (<em>float</em>) – [0, 1] for all hexagons. for changing the opacity of specific hexagons, color them with an RGBA value</p></li>
+<li><p><strong>wireframe</strong> (<em>bool</em>) – </p></li>
+<li><p><strong>elevation_scale</strong> (<em>float</em>) – </p></li>
+<li><p><strong>hide_underscored</strong> (<em>bool</em>) – </p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
 </div>
 </div>
 
