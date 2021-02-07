@@ -60,7 +60,7 @@ def plot_rows(
 
 
 def plot(data, **kwargs):
-    """
+    """ Hello there
 
     todo: but how to describe default values?
     todo: where am i actually "using" the default param behavior?

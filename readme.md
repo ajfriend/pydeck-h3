@@ -8,6 +8,8 @@ install from github:
 pip install git+https://github.com/ajfriend/pydeck-h3
 ```
 
+playing around with `jupyter-book`: 
+
 ## hexcluster class
 
 what about support for the hexcluster class?
