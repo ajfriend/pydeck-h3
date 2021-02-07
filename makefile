@@ -2,8 +2,9 @@
 
 env:
 	python -m venv env
-	env/bin/pip install --upgrade pip wheel
+	env/bin/pip install --upgrade pip wheel setuptools
 	env/bin/pip install -r requirements.txt
+	env/bin/pip install -r requirements-docs.txt
 	env/bin/pip install -e .
 	make test
 
