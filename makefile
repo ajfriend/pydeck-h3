@@ -1,4 +1,4 @@
-.PHONY: env lab clean purge kill
+.PHONY: env lab clean purge kill docs-clean docs-build
 
 env:
 	python -m venv env
@@ -10,7 +10,7 @@ env:
 lab:
 	env/bin/jupyter lab
 
-clean:
+clean: docs-clean
 	find . -type f -name '*.html' | xargs rm -r
 	find . -type f -name '*.pyc' | xargs rm -r
 	find . -type d -name '*.ipynb_checkpoints' | xargs rm -r
@@ -32,3 +32,9 @@ github: purge
 	env/bin/pip install --upgrade pip wheel
 	env/bin/pip install -r requirements.txt
 	env/bin/pip install git+https://github.com/ajfriend/pydeck-h3
+
+docs-build:
+	env/bin/jupyter-book build docs/
+
+docs-clean:
+	rm -rf docs/_build/

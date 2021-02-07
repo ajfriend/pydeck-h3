@@ -13,4 +13,4 @@ matplotlib
 toolz
 pytest
 
-
+jupyter-book
