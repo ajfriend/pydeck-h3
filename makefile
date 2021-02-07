@@ -39,3 +39,6 @@ docs-build:
 
 docs-clean:
 	rm -rf docs/_build/
+
+docs-open:
+	open docs/_build/html/index.html
