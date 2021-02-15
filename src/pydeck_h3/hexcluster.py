@@ -94,8 +94,7 @@ def plot(data, col_hex='hexset', col_color='color', cmap='YlOrRd', line_width=10
     deck = pdk.Deck(
         layers = [layer],
         initial_view_state = view,
-        mapbox_key = MB_KEY,
-        map_style = 'mapbox://styles/mapbox/light-v10',
+        map_style = 'light',
     )
 
     return deck
@@ -152,8 +151,7 @@ def plot3d(data, col_hex='hexset', col_color='color', cmap='YlOrRd', opacity=0.7
     deck = pdk.Deck(
         layers = [layer],
         initial_view_state = view,
-        mapbox_key = MB_KEY,
-        map_style = 'mapbox://styles/mapbox/light-v10',
+        map_style = 'light',
     )
 
     return deck

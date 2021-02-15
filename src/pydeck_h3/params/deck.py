@@ -17,8 +17,7 @@ def get_deck_params(rows, hide_underscored=True):
     params = {
         'initial_view_state': view,
         'tooltip': tooltip,
-        'mapbox_key': MB_KEY,
-        'map_style': 'mapbox://styles/mapbox/light-v10',
+        'map_style': 'light',
     }
 
     return params

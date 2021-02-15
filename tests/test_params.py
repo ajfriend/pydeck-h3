@@ -77,8 +77,7 @@ def test_2d_deck():
     deck_expected = {
         'initial_view_state': {"latitude": 37.776346003249365, "longitude": -122.42312111464462, "zoom": 16},
         'tooltip': {'html': '<b>h3cell</b>: {h3cell}<br/><b>cats</b>: {cats}<br/><b>dogs</b>: {dogs}'},
-        'mapbox_key': 'pk.eyJ1IjoiYWpmcmllbmQiLCJhIjoiY2pmbmRjczJmMTVkMzJxcW92Y2E4cHZjdCJ9.Jf-gFXU7FOIQxALzPajbdg',
-        'map_style': 'mapbox://styles/mapbox/light-v10'
+        'map_style': 'light'
     }
 
     assert eval(deck_params['initial_view_state'].to_json()) == approx(deck_expected['initial_view_state'])
