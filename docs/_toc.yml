@@ -1,7 +1,10 @@
 # Table of contents
 # Learn more at https://jupyterbook.org/customize/toc.html
-- file: intro
-- file: content
-  sections:
-    - file: markdown
-- file: math
+format: jb-book
+
+root: intro
+parts:
+- caption: Getting started
+  chapters:
+  - file: jupyter_book_notes
+
