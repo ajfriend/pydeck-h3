@@ -1,0 +1,28 @@
+#######################################################################################
+# A default configuration that will be loaded for all jupyter books
+# See the documentation for help and more options:
+# https://jupyterbook.org/customize/config.html
+
+title: pydeck-h3
+author: ajfriend
+copyright: "2021"
+logo: logo.svg
+
+html:
+  favicon: logo.svg
+  home_page_in_navbar: false
+  use_edit_page_button: true
+  use_repository_button: true
+  baseurl: https://ajfriend.github.io/pydeck-h3/
+
+repository:
+  url: https://ajfriend.github.io/pydeck-h3/
+  branch: master
+  path_to_book: docs
+
+sphinx:
+  extra_extensions:
+    - 'sphinx.ext.autodoc'
+    - 'sphinx.ext.autosummary'
+    - 'sphinx.ext.napoleon'
+    - 'sphinx.ext.viewcode'
