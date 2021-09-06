@@ -2,13 +2,15 @@
 
 Helper functions to viz H3 data with https://pydeck.gl/
 
+- https://github.com/ajfriend/pydeck-h3
+- WIP website: https://ajfriend.github.io/pydeck-h3/
+
 install from github:
 
 ```
 pip install git+https://github.com/ajfriend/pydeck-h3
 ```
 
-playing around with `jupyter-book`: https://ajfriend.github.io/pydeck-h3/
 
 ## hexcluster class
 
